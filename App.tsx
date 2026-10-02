@@ -126,7 +126,7 @@ function Shell() {
     const sub = AppState.addEventListener("change", (state) => {
       if (state !== "active") return;
       web.current?.injectJavaScript(
-        "(function(){try{var root=document.getElementById('root');if(!root||root.childElementCount===0){location.reload();return;}document.body.style.transform='translateZ(0)';requestAnimationFrame(function(){document.body.style.transform='';});}catch(e){}})();true;",
+        "(function(){try{var root=document.getElementById('root');if(!root||root.childElementCount===0){location.reload();return;}window.dispatchEvent(new Event('granth-resume'));document.body.style.transform='translateZ(0)';requestAnimationFrame(function(){document.body.style.transform='';});}catch(e){}})();true;",
       );
     });
     return () => sub.remove();
