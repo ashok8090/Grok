@@ -1,12 +1,12 @@
 package com.wnm.granthprabandhan.back
 
-import android.app.Activity
 import android.os.Build
 import android.os.SystemClock
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
 import android.window.OnBackInvokedDispatcher
+import androidx.activity.ComponentActivity
 import androidx.activity.OnBackPressedCallback
 
 /**
@@ -16,7 +16,7 @@ import androidx.activity.OnBackPressedCallback
 object GranthBack {
   private var last = 0L
 
-  fun install(activity: Activity) {
+  fun install(activity: ComponentActivity) {
     activity.onBackPressedDispatcher.addCallback(
       activity,
       object : OnBackPressedCallback(true) {
@@ -32,7 +32,7 @@ object GranthBack {
     }
   }
 
-  private fun step(activity: Activity) {
+  private fun step(activity: ComponentActivity) {
     val now = SystemClock.uptimeMillis()
     if (now - last < 260) return
     last = now
