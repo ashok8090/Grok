@@ -3,6 +3,7 @@ package com.wnm.granthprabandhan
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.view.KeyEvent
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
@@ -41,6 +42,21 @@ class MainActivity : ReactActivity() {
               mainComponentName,
               fabricEnabled
           ){})
+  }
+
+  /**
+   * Vivo (and some other skins) deliver KEYCODE_BACK to the focused WebView first.
+   * That WebView has no real history for this single-page app, so the activity finishes.
+   * Eat the key here and hand it to React Native once, which walks back to the dashboard.
+   */
+  override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+    if (event.keyCode == KeyEvent.KEYCODE_BACK) {
+      if (event.action == KeyEvent.ACTION_UP && !event.isCanceled) {
+        onBackPressedDispatcher.onBackPressed()
+      }
+      return true
+    }
+    return super.dispatchKeyEvent(event)
   }
 
   /**

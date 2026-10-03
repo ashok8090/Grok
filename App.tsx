@@ -115,7 +115,7 @@ function Shell() {
   useEffect(() => {
     const onBack = () => {
       web.current?.injectJavaScript(
-        "if(window.__granthBack){window.__granthBack();}else if(window.ReactNativeWebView){window.ReactNativeWebView.postMessage(JSON.stringify({type:'exit-app'}));}true;",
+        "if(window.__granthBack){window.__granthBack();}true;",
       );
       return true;
     };

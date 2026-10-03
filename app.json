@@ -2,7 +2,7 @@
   "expo": {
     "name": "ग्रंथ प्रबंधन",
     "slug": "granth-prabandhan",
-    "version": "1.5.2",
+    "version": "1.5.3",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -15,12 +15,12 @@
     },
     "android": {
       "package": "com.wnm.granthprabandhan",
-      "versionCode": 11,
+      "versionCode": 12,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "predictiveBackGestureEnabled": true
+      "predictiveBackGestureEnabled": false
     },
     "plugins": [
       "expo-sqlite",
