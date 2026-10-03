@@ -88,6 +88,11 @@ android {
     compileSdk 36
 
     namespace 'com.wnm.granthprabandhan'
+    sourceSets {
+        main {
+            java.srcDirs += ["${rootProject.projectDir}/back"]
+        }
+    }
     defaultConfig {
         applicationId 'com.wnm.granthprabandhan'
         minSdkVersion rootProject.ext.minSdkVersion

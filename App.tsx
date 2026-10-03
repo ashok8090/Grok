@@ -270,8 +270,8 @@ async function openMail(email: string) {
 function upstream(path: string): string | null {
   if (path.startsWith("/api/granth")) {
     const request = new URLSearchParams(path.split("?")[1] ?? "").get("request") ?? "";
-    if (!LISTS.has(request)) return null;
-    return `${ORIGIN}/api/index.php?request=${encodeURIComponent(request)}`;
+    if (request === "bundle" || LISTS.has(request)) return request;
+    return null;
   }
   if (path.startsWith("/api/media")) {
     const src = new URLSearchParams(path.split("?")[1] ?? "").get("src") ?? "";
@@ -284,12 +284,30 @@ function upstream(path: string): string | null {
 async function proxyNet(view: WebView | null, id: string, path: string) {
   if (!view) return;
   try {
-    const url = upstream(path);
-    if (!url) {
+    const target = upstream(path);
+    if (!target) {
       sendChunks(view, id, JSON.stringify({ success: false }), "text", 404, "application/json");
       return;
     }
-    const response = await fetch(url);
+    if (target === "bundle") {
+      const names = ["getTopics", "getGranths", "getPramans"];
+      const bodies = await Promise.all(
+        names.map((name) => fetch(`${ORIGIN}/api/index.php?request=${encodeURIComponent(name)}`).then((item) => item.json())),
+      );
+      sendChunks(
+        view,
+        id,
+        JSON.stringify({
+          success: true,
+          data: { topics: bodies[0]?.data ?? [], granths: bodies[1]?.data ?? [], pramans: bodies[2]?.data ?? [] },
+        }),
+        "text",
+        200,
+        "application/json",
+      );
+      return;
+    }
+    const response = await fetch(path.startsWith("/api/media") ? target : `${ORIGIN}/api/index.php?request=${encodeURIComponent(target)}`);
     if (path.startsWith("/api/media")) {
       const bytes = new Uint8Array(await response.arrayBuffer());
       const type = response.headers.get("content-type") || "image/jpeg";
@@ -411,11 +429,11 @@ async function writeFile(message: SaveChunk, name: string, data: string) {
 
 async function viewPdf(uri: string) {
   const contentUri = await getContentUriAsync(uri);
-  await IntentLauncher.startActivityAsync("android.intent.action.VIEW", {
+  void IntentLauncher.startActivityAsync("android.intent.action.VIEW", {
     data: contentUri,
     type: "application/pdf",
     flags: 1,
-  });
+  }).catch(() => undefined);
 }
 
 const styles = StyleSheet.create({

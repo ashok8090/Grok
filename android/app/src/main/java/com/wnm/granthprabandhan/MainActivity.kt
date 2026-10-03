@@ -11,11 +11,13 @@ import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.fabricEnable
 import com.facebook.react.defaults.DefaultReactActivityDelegate
 
 import expo.modules.ReactActivityDelegateWrapper
+import com.wnm.granthprabandhan.back.GranthBack
 
 class MainActivity : ReactActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     setTheme(R.style.AppTheme);
     super.onCreate(null)
+    GranthBack.install(this)
   }
 
   override fun onNewIntent(intent: Intent) {
