@@ -11,6 +11,7 @@ import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.uimanager.ViewManager
+import com.wnm.granthprabandhan.back.GranthBack
 import java.io.File
 import java.io.FileInputStream
 
@@ -54,6 +55,13 @@ class DownloadsModule(reactContext: ReactApplicationContext) : ReactContextBaseJ
     } catch (error: Exception) {
       promise.reject("download", error.message, error)
     }
+  }
+
+  @ReactMethod
+  fun exitApp() {
+    val activity = reactApplicationContext.currentActivity ?: return
+    GranthBack.allowExit = true
+    activity.runOnUiThread { activity.finishAffinity() }
   }
 }
 

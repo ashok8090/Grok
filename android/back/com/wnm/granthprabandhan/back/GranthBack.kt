@@ -10,10 +10,13 @@ import androidx.activity.ComponentActivity
 import androidx.activity.OnBackPressedCallback
 
 /**
- * One back path for every phone, including Vivo.
- * The system back is always consumed here, then the page stack moves inside the app.
+ * Hardware and gesture back stay inside the app on every phone.
+ * The activity is finished only after the in-app confirm button.
  */
 object GranthBack {
+  @JvmField
+  var allowExit = false
+
   private var last = 0L
 
   fun install(activity: ComponentActivity) {
@@ -21,20 +24,21 @@ object GranthBack {
       activity,
       object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
-          step(activity)
+          poke(activity)
         }
       },
     )
     if (Build.VERSION.SDK_INT >= 33) {
       activity.onBackInvokedDispatcher.registerOnBackInvokedCallback(OnBackInvokedDispatcher.PRIORITY_OVERLAY) {
-        step(activity)
+        poke(activity)
       }
     }
   }
 
-  private fun step(activity: ComponentActivity) {
+  fun poke(activity: ComponentActivity) {
+    if (allowExit) return
     val now = SystemClock.uptimeMillis()
-    if (now - last < 260) return
+    if (now - last < 280) return
     last = now
     val web = find(activity.window?.decorView) ?: return
     web.post {
@@ -44,6 +48,8 @@ object GranthBack {
       )
     }
   }
+
+  fun swallowed(): Boolean = SystemClock.uptimeMillis() - last < 1500
 
   private fun find(view: View?): WebView? {
     if (view is WebView) return view

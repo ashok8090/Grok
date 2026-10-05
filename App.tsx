@@ -223,7 +223,9 @@ async function onBridge(raw: string, view: WebView | null, parts: Map<string, st
     return;
   }
   if (message.type === "exit-app") {
-    BackHandler.exitApp();
+    const granth = NativeModules.GranthDownloads as { exitApp?: () => void } | undefined;
+    if (granth?.exitApp) granth.exitApp();
+    else BackHandler.exitApp();
     return;
   }
   if (message.type === "share-text") {
