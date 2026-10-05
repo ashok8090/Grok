@@ -14,9 +14,14 @@ import com.wnm.granthprabandhan.back.GranthBack
 
 class MainActivity : ReactActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
-    setTheme(R.style.AppTheme);
+    setTheme(R.style.AppTheme)
     super.onCreate(null)
     GranthBack.install(this)
+  }
+
+  override fun onResume() {
+    super.onResume()
+    GranthBack.raise(this)
   }
 
   override fun onNewIntent(intent: Intent) {
@@ -32,11 +37,6 @@ class MainActivity : ReactActivity() {
     return super.dispatchKeyEvent(event)
   }
 
-  override fun finish() {
-    if (!GranthBack.allowExit && GranthBack.swallowed()) return
-    super.finish()
-  }
-
   override fun invokeDefaultOnBackPressed() {
     if (GranthBack.allowExit) {
       super.invokeDefaultOnBackPressed()
@@ -45,12 +45,32 @@ class MainActivity : ReactActivity() {
     GranthBack.poke(this)
   }
 
+  override fun finish() {
+    if (!GranthBack.allowExit) {
+      GranthBack.poke(this)
+      return
+    }
+    super.finish()
+  }
+
+  override fun finishAffinity() {
+    if (!GranthBack.allowExit) {
+      GranthBack.poke(this)
+      return
+    }
+    super.finishAffinity()
+  }
+
+  override fun moveTaskToBack(nonRoot: Boolean): Boolean {
+    if (!GranthBack.allowExit) {
+      GranthBack.poke(this)
+      return true
+    }
+    return super.moveTaskToBack(nonRoot)
+  }
+
   override fun getMainComponentName(): String = "main"
 
-  /**
-   * Returns the instance of the [ReactActivityDelegate]. We use [DefaultReactActivityDelegate]
-   * which allows you to enable New Architecture with a single boolean flags [fabricEnabled]
-   */
   override fun createReactActivityDelegate(): ReactActivityDelegate {
     return ReactActivityDelegateWrapper(
           this,

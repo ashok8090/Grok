@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.wnm.granthprabandhan",
+      "sha256_cert_fingerprints": [
+        "68:C7:CF:34:EC:F0:FA:DA:21:05:C2:65:D2:59:54:96:BA:A1:BB:C9:7C:3F:DD:BC:35:D2:1D:BE:8D:0E:DD:DE"
+      ]
+    }
+  }
+]

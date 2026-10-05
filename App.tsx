@@ -176,7 +176,11 @@ function Shell() {
             void openMail(request.url.replace(/^mailto:/i, "").split("?")[0]);
             return false;
           }
-          return true;
+          if (/granth\.grok\.me|granth:\/\//i.test(request.url)) {
+            openDeepLink(web.current, request.url);
+            return false;
+          }
+          return request.url.startsWith("file://") || request.url.startsWith("about:");
         }}
         onMessage={(event) => {
           void onBridge(event.nativeEvent.data, web.current, parts.current);
